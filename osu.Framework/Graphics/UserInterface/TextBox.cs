@@ -14,7 +14,6 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
 using osu.Framework.Allocation;
-using osu.Framework.Audio;
 using osu.Framework.Bindables;
 using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Platform;
@@ -57,9 +56,6 @@ namespace osu.Framework.Graphics.UserInterface
 
         //represents the left/right selection coordinates of the word double clicked on when dragging
         private int[] doubleClickWord;
-
-        [Resolved]
-        private AudioManager audio { get; set; }
 
         /// <summary>
         /// Whether this TextBox should accept left and right arrow keys for navigation.
@@ -467,7 +463,6 @@ namespace osu.Framework.Graphics.UserInterface
 
             if (oldStart != selectionStart || oldEnd != selectionEnd)
             {
-                audio.Samples.Get(@"Keyboard/key-movement")?.Play();
                 cursorAndLayout.Invalidate();
             }
         }
@@ -484,9 +479,6 @@ namespace osu.Framework.Graphics.UserInterface
             int start = MathHelper.Clamp(selectionLength > 0 ? selectionLeft : selectionLeft - 1, 0, text.Length - count);
 
             if (count == 0) return false;
-
-            if (sound)
-                audio.Samples.Get(@"Keyboard/key-delete")?.Play();
 
             foreach (var d in TextFlow.Children.Skip(start).Take(count).ToArray()) //ToArray since we are removing items from the children in this block.
             {
@@ -696,14 +688,7 @@ namespace osu.Framework.Graphics.UserInterface
             string pendingText = textInput?.GetPendingText();
 
             if (!string.IsNullOrEmpty(pendingText) && !ReadOnly)
-            {
-                if (pendingText.Any(char.IsUpper))
-                    audio.Samples.Get(@"Keyboard/key-caps")?.Play();
-                else
-                    audio.Samples.Get($@"Keyboard/key-press-{RNG.Next(1, 5)}")?.Play();
-
                 InsertString(pendingText);
-            }
 
             if (consumingText)
                 Schedule(consumePendingText);
@@ -766,8 +751,6 @@ namespace osu.Framework.Graphics.UserInterface
             Background.Colour = ReleaseFocusOnCommit ? BackgroundUnfocused : BackgroundFocused;
             Background.ClearTransforms();
             Background.FlashColour(BackgroundCommit, 400);
-
-            audio.Samples.Get(@"Keyboard/key-confirm")?.Play();
 
             OnCommit?.Invoke(this, hasNewComittableText);
             lastCommitText = text;
@@ -955,7 +938,6 @@ namespace osu.Framework.Graphics.UserInterface
             //search for unchanged characters..
             int matchCount = 0;
             bool matching = true;
-            bool didDelete = false;
 
             int searchStart = text.Length - imeDrawables.Count;
 
@@ -977,15 +959,12 @@ namespace osu.Framework.Graphics.UserInterface
                     //if we are no longer matching, we want to remove all further characters.
                     removeCharacterOrSelection(false);
                     imeDrawables.RemoveAt(matchCount);
-                    didDelete = true;
                 }
             }
 
             if (matchCount == s.Length)
             {
                 //in the case of backspacing (or a NOP), we can exit early here.
-                if (didDelete)
-                    audio.Samples.Get(@"Keyboard/key-delete")?.Play();
                 return;
             }
 
@@ -1001,8 +980,6 @@ namespace osu.Framework.Graphics.UserInterface
                     imeDrawables.Add(dr);
                 }
             }
-
-            audio.Samples.Get($@"Keyboard/key-press-{RNG.Next(1, 5)}")?.Play();
         }
 
         #endregion

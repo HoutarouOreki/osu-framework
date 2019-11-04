@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
 using osu.Framework.Extensions.TypeExtensions;
 using osu.Framework.Graphics;
 
@@ -16,7 +15,6 @@ namespace osu.Framework.Allocation
     /// An attribute that may be attached to a class definitions, fields, or properties of a <see cref="Drawable"/> to indicate that the value should be cached as a dependency.
     /// Cached values may be resolved through <see cref="BackgroundDependencyLoaderAttribute"/> or <see cref="ResolvedAttribute"/>.
     /// </summary>
-    [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true, Inherited = false)]
     public class CachedAttribute : Attribute
     {

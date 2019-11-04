@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using JetBrains.Annotations;
 using osu.Framework.Extensions.TypeExtensions;
 
 namespace osu.Framework.Allocation
@@ -13,7 +12,6 @@ namespace osu.Framework.Allocation
     /// <summary>
     /// Marks a method as the (potentially asynchronous) initialization method of a <see cref="osu.Framework.Graphics.Drawable"/>, allowing for automatic injection of dependencies via the parameters of the method.
     /// </summary>
-    [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Method)]
     public class BackgroundDependencyLoaderAttribute : Attribute
     {

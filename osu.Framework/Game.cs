@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using osuTK;
 using osu.Framework.Allocation;
-using osu.Framework.Audio;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
@@ -40,8 +39,6 @@ namespace osu.Framework
         /// Whether the game is active (in the foreground).
         /// </summary>
         public IBindable<bool> IsActive => isActive;
-
-        public AudioManager Audio { get; private set; }
 
         public ShaderManager Shaders { get; private set; }
 
@@ -118,18 +115,6 @@ namespace osu.Framework
             var samples = new ResourceStore<byte[]>();
             samples.AddStore(new NamespacedResourceStore<byte[]>(Resources, @"Samples"));
             samples.AddStore(new OnlineStore());
-
-            Audio = new AudioManager(Host.AudioThread, tracks, samples) { EventScheduler = Scheduler };
-            dependencies.Cache(Audio);
-
-            dependencies.CacheAs(Audio.Tracks);
-            dependencies.CacheAs(Audio.Samples);
-
-            // attach our bindables to the audio subsystem.
-            config.BindWith(FrameworkSetting.AudioDevice, Audio.AudioDevice);
-            config.BindWith(FrameworkSetting.VolumeUniversal, Audio.Volume);
-            config.BindWith(FrameworkSetting.VolumeEffect, Audio.VolumeSample);
-            config.BindWith(FrameworkSetting.VolumeMusic, Audio.VolumeTrack);
 
             Shaders = new ShaderManager(new NamespacedResourceStore<byte[]>(Resources, @"Shaders"));
             dependencies.Cache(Shaders);
@@ -264,13 +249,5 @@ namespace osu.Framework
         }
 
         protected virtual bool OnExiting() => false;
-
-        protected override void Dispose(bool isDisposing)
-        {
-            base.Dispose(isDisposing);
-
-            Audio?.Dispose();
-            Audio = null;
-        }
     }
 }

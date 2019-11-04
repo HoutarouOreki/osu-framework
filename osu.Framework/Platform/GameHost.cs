@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime;
 using System.Runtime.ExceptionServices;
@@ -37,7 +36,6 @@ using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using osu.Framework.Graphics.Textures;
-using osu.Framework.Graphics.Video;
 using osu.Framework.IO.Stores;
 using SixLabors.Memory;
 
@@ -153,7 +151,6 @@ namespace osu.Framework.Platform
         public GameThread DrawThread;
         public GameThread UpdateThread;
         public InputThread InputThread;
-        public AudioThread AudioThread;
 
         private double maximumUpdateHz;
 
@@ -480,7 +477,6 @@ namespace osu.Framework.Platform
                 });
 
                 RegisterThread(InputThread = new InputThread());
-                RegisterThread(AudioThread = new AudioThread());
 
                 Trace.Listeners.Clear();
                 Trace.Listeners.Add(new ThrowingTraceListener());
@@ -912,15 +908,6 @@ namespace osu.Framework.Platform
         /// <returns>A texture loader store.</returns>
         public virtual IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore)
             => new TextureLoaderStore(underlyingStore);
-
-        /// <summary>
-        /// Create a <see cref="VideoDecoder"/> with the given stream. May be overridden by platforms that require a different
-        /// decoder implementation.
-        /// </summary>
-        /// <param name="stream">The <see cref="Stream"/> to decode.</param>
-        /// <param name="scheduler">The <see cref="Scheduler"/> to use when scheduling tasks from the decoder thread.</param>
-        /// <returns>An instance of <see cref="VideoDecoder"/> initialised with the given stream.</returns>
-        public virtual VideoDecoder CreateVideoDecoder(Stream stream, Scheduler scheduler) => new VideoDecoder(stream, scheduler);
     }
 
     /// <summary>

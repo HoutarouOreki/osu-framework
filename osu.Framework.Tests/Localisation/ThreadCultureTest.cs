@@ -67,7 +67,6 @@ namespace osu.Framework.Tests.Localisation
             {
                 host.DrawThread.Scheduler.Add(() => cultures.Add(Thread.CurrentThread.CurrentCulture));
                 host.UpdateThread.Scheduler.Add(() => cultures.Add(Thread.CurrentThread.CurrentCulture));
-                host.AudioThread.Scheduler.Add(() => cultures.Add(Thread.CurrentThread.CurrentCulture));
             });
 
             AddUntilStep("wait for query", () => cultures.Count == 3);

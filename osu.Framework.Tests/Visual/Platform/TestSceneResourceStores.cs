@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using osu.Framework.Allocation;
-using osu.Framework.Audio;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -26,10 +25,9 @@ namespace osu.Framework.Tests.Visual.Platform
         private FontStore fontStore;
         private TextureStore textureStore;
         private Storage storage;
-        private AudioManager audioManager;
 
         [BackgroundDependencyLoader]
-        private void load(FontStore fontStore, Storage storage, TextureStore textureStore, AudioManager audioManager)
+        private void load(FontStore fontStore, Storage storage, TextureStore textureStore)
         {
             Child = new BasicScrollContainer
             {
@@ -46,7 +44,6 @@ namespace osu.Framework.Tests.Visual.Platform
 
             this.fontStore = fontStore;
             this.textureStore = textureStore;
-            this.audioManager = audioManager;
             this.storage = storage;
         }
 
@@ -58,9 +55,6 @@ namespace osu.Framework.Tests.Visual.Platform
 
         [Test]
         public void TestGetTextureStore() => showResources(() => textureStore.GetAvailableResources(), l => textureStore.Get(l));
-
-        [Test]
-        public void TestGetTrackManager() => showResources(() => audioManager.Tracks);
 
         private void showResources<T>(Func<IResourceStore<T>> store) => showResources(() => store().GetAvailableResources(), l => store().Get(l));
 
